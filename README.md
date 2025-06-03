@@ -1,4 +1,4 @@
-# CMI Competition: Detect Behavior with Sensor Data
+# <a href="https://www.kaggle.com/competitions/cmi-detect-behavior-with-sensor-data">CMI Competition: Detect Behavior with Sensor Data</a>
 Predicting Body Focused Repetitive Behaviors (BFRB) from a Wrist-Worn Device.
 
 ## Problem Statement: 
