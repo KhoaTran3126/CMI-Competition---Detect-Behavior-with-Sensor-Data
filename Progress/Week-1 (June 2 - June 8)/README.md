@@ -4,10 +4,12 @@
 1. How can demographics data be incorporated into train? Can I utilize distance measures in demographics data to enhance my predictions? Does handedness matter?
 2. What are the relationships of each feature to the prediction of gesture?
 3. Can I condense information of acceleration, temperature, time-of-flight, and rotation sensors' data? 
-4. Amongst other predictive features, **orientation** and **behavior** features are **not present in test set**. Are they predictive of gesture at all? Is it possible to infer them? How?
+4. Amongst other predictive features, **orientation**, **phase**, and **behavior** features are **not present in test set**. Are they predictive of gesture at all? Is it possible to infer them? How?
 5. What can I use **sequence_counter** for, aside that it indicates a new subject's action?
 
 ## Hypotheses
+1. **acc_**, **rot_**, and **tof_v_** features can encode **orientation**, **phase**, **behavior** features by clustering.
+2. Only summary statistics of the **last 20% of sensors data per sequence** are useful for detecting gestures.  
 
 ## Experimental Designs
 
