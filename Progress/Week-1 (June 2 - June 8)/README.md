@@ -9,7 +9,7 @@
 
 ## Hypotheses
 1. **acc_**, **rot_**, and **tof_v_** features can encode **orientation**, **phase**, **behavior** features by clustering.
-2. Only summary statistics of the **last 20% of sensors data per sequence** are useful for detecting gestures.  
+2. Only summary statistics of the **last 20% of sensors data per sequence** are useful for detecting gestures. An indicator for the tail of the sequence would be useful, and its interactions with other numeric features as well.   
 
 ## Experimental Designs
 
