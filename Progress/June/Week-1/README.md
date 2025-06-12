@@ -11,10 +11,8 @@
 1. **acc_**, **rot_**, and **tof_v_** features can encode **orientation**, **phase**, **behavior** features by clustering.
 2. Only summary statistics of the **last 20% of sensors data per sequence** are useful for detecting gestures. An indicator for the tail of the sequence would be useful, and its interactions with other numeric features as well.   
 
-## Experimental Designs
+## Discoveries
+The hierachy of the data follows the outline of the following display.
 
-## Experimental Results
+![Alt text](https://github.com/KhoaTran3126/CMI-Competition---Detect-Behavior-with-Sensor-Data/blob/8d571c2c6f90a57c9a574c2a4c86af3dcd2d1e73/Visualizations/Data's%20Hierachy.pdf)
 
-## Next Steps
-
-## Conclusion
