@@ -12,7 +12,10 @@
 2. Only summary statistics of the **last 20% of sensors data per sequence** are useful for detecting gestures. An indicator for the tail of the sequence would be useful, and its interactions with other numeric features as well.   
 
 ## Discoveries
-The hierachy of the data follows the outline of the following display.
+The hierachy of the data follows the outline of subject-sequence, where each subject generates 102 sequences typically, composing of 64 target and 38 non-target sequences. Certain summaries of sensor distributions can provide slight separations between classes. 
 
-![Alt text](https://github.com/KhoaTran3126/CMI-Competition---Detect-Behavior-with-Sensor-Data/blob/8d571c2c6f90a57c9a574c2a4c86af3dcd2d1e73/Visualizations/Data's%20Hierachy.pdf)
+# Next Steps
+1. Test these tuned baseline classifiers: LGBM, CatBoost, XGB
+2. Test ensemble method
+3. Try projection to understand patterns in data
 
