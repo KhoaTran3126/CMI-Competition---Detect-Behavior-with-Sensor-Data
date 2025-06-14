@@ -1,6 +1,4 @@
-import pandas as pd
 from sklearn.metrics import f1_score
-
 
 class ParticipantVisibleError(Exception):
     """Errors raised here will be shown directly to the competitor."""
@@ -50,74 +48,41 @@ class CompetitionMetric:
         # Compute binary F1 (Target vs Non-Target)
         y_true_bin = sol['gesture'].isin(self.target_gestures).values
         y_pred_bin = sub['gesture'].isin(self.target_gestures).values
-        f1_binary = f1_score(
-            y_true_bin,
-            y_pred_bin,
-            pos_label=True,
-            zero_division=0,
-            average='binary'
-        )
+        
+        f1_binary = f1_score(y_true_bin, y_pred_bin, pos_label=True, zero_division=0, average='binary')
 
         # Build multi-class labels for gestures
         y_true_mc = sol['gesture'].apply(lambda x: x if x in self.target_gestures else 'non_target')
         y_pred_mc = sub['gesture'].apply(lambda x: x if x in self.target_gestures else 'non_target')
 
-        # Compute macro F1 over all gesture classes
-        f1_macro = f1_score(
-            y_true_mc,
-            y_pred_mc,
-            average='macro',
-            zero_division=0
-        )
+        f1_macro = f1_score(y_true_mc, y_pred_mc, average='macro', zero_division=0)
 
-        return 0.5 * f1_binary + 0.5 * f1_macro
+        return f1_binary, f1_macro, (f1_binary+f1_macro)/2.0
 
 
-def score(
-    solution: pd.DataFrame,
-    submission: pd.DataFrame,
-    row_id_column_name: str
-) -> float:
+def F1_score(y_val, y_pred, lbl_encoder, choice="weighted_score") -> float:
     """
-    Compute hierarchical macro F1 for the CMI 2025 challenge.
-
-    Expected input:
-      - solution and submission as pandas.DataFrame
-      - Column 'sequence_id': unique identifier for each sequence
-      - 'gesture': one of the eight target gestures or "Non-Target"
-
-    This metric averages:
-    1. Binary F1 on SequenceType (Target vs Non-Target)
-    2. Macro F1 on gesture (mapping non-targets to "Non-Target")
-
-    Raises ParticipantVisibleError for invalid submissions,
-    including invalid SequenceType or gesture values.
-
-
-    Examples
-    --------
-    >>> import pandas as pd
-    >>> row_id_column_name = "id"
-    >>> solution = pd.DataFrame({'id': range(4), 'gesture': ['Eyebrow - pull hair']*4})
-    >>> submission = pd.DataFrame({'id': range(4), 'gesture': ['Forehead - pull hairline']*4})
-    >>> score(solution, submission, row_id_column_name=row_id_column_name)
-    0.5
-    >>> submission = pd.DataFrame({'id': range(4), 'gesture': ['Text on phone']*4})
-    >>> score(solution, submission, row_id_column_name=row_id_column_name)
-    0.0
-    >>> score(solution, solution, row_id_column_name=row_id_column_name)
-    1.0
+    Provides competition's F1 score
+    y_val: truth labels
+    y_pred: predicted labels
+    lbl_encoder: label encoder
+    choice: choice of score to return. Can be "binary", "macro", "weighted_score", or None to receive all scores
     """
-    # Validate required columns
-    for col in (row_id_column_name, 'gesture'):
-        if col not in solution.columns:
-            raise ParticipantVisibleError(f"Solution file missing required column: '{col}'")
-        if col not in submission.columns:
-            raise ParticipantVisibleError(f"Submission file missing required column: '{col}'")
-
     metric = CompetitionMetric()
-    return metric.calculate_hierarchical_f1(solution, submission)
+    y_val  = pd.DataFrame({'id':range(len(y_val)), 
+                           'gesture':y_val})
+    y_pred = pd.DataFrame({'id':range(len(y_pred)), 
+                           'gesture':y_pred})
 
-# metric = CompetitionMetric()
-# score = metric.calculate_hierarchical_f1(y_true, y_pred)
-# print(f"Estimated leaderboard (val) score: {score:.4f}")
+    ## Convert numeric labels to original descriptions
+    y_val["gesture"]  = lbl_encoder.inverse_transform(y_val["gesture"])
+    y_pred["gesture"] = lbl_encoder.inverse_transform(y_pred["gesture"])
+
+    ## Compute scores
+    binary, macro, weighted_score = metric.calculate_hierarchical_f1(y_val, y_pred)
+
+    ## Returns result
+    if choice=="binary": return binary
+    elif choice=="macro": return macro
+    elif choice=="weighted_score": return weighted_score
+    else: return (binary, macro, weighted_score)
