@@ -1,11 +1,26 @@
 from sklearn.model_selection import StratifiedKFold
 from sklearn.base import clone
-import  pandas
+import pandas
 import numpy
 import lightgbm
+import xgboost
+import catboost
 
 def cv_evaluate(model, model_kind, X, y, lbl_encoder, n_splits=5, 
                 random_state=SEED, stopping_rounds=100, min_delta=.0005):
+
+    """
+    model: The initialized model
+    model_kind: Name of model. Could be "lgbm", "xgb", "catboost", or None to customize model training
+    X: Training samples
+    y: Training labels
+    lbl_encoder: Label encoder
+    n_splits=5: Number of splits on training data
+    random_state: Seed for controlling KFold process 
+    stopping_rounds: Maximum allowable additional iterations before halting
+    min_delta: Minimum improvement in loss function required to continue
+    """
+                  
     skfold = StratifiedKFold(n_splits=n_splits, shuffle=True, random_state=random_state)
     oof_preds = np.zeros_like(y)
     binary_scores   = []
